@@ -1,6 +1,13 @@
 # Browser Driver
 
 运行selenium需要用到浏览器驱动，本章介绍浏览器的驱动下载。<br>
+- [Browser Driver](#browser-driver)
+  - [Drivers 简介:](#drivers-简介)
+  - [常见浏览器驱动程序的下载链接:](#常见浏览器驱动程序的下载链接)
+  - [Chrome Driver下载:](#chrome-driver下载)
+  - [下载、安装指令:](#下载安装指令)
+  - [使用chrome的selenium代码测试:](#使用chrome的selenium代码测试)
+  - [ubuntu更新Chrome指令：](#ubuntu更新chrome指令)
 
 ## Drivers 简介:
 
