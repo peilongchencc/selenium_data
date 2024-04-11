@@ -6,7 +6,6 @@
   - [常见浏览器驱动程序的下载链接:](#常见浏览器驱动程序的下载链接)
   - [Chrome Driver下载:](#chrome-driver下载)
   - [下载、安装指令:](#下载安装指令)
-  - [使用chrome的selenium代码测试:](#使用chrome的selenium代码测试)
   - [ubuntu更新Chrome指令：](#ubuntu更新chrome指令)
 
 ## Drivers 简介:
@@ -133,13 +132,6 @@ Archive:  chromedriver-linux64.zip
   inflating: chromedriver-linux64/chromedriver  
 (base) root@iZ2zea5v77oawjy2qzxxxxx:/data/selenium_data# sudo mv chromedriver-linux64 /usr/local/bin/
 (base) root@iZ2zea5v77oawjy2qzxxxxx:/data/selenium_data# 
-```
-
-
-## 使用chrome的selenium代码测试:
-
-```python
-
 ```
 
 
