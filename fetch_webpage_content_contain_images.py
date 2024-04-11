@@ -8,7 +8,7 @@ Requirements:
 3. 安装与自己的chrome版本对应的chrome driver
 Reference Link: 
 Notes: 
-1. selenium更新频繁且会改动函数名,如果代码无法报错,大概率是selenium版本不对,需要调整代码或selenium版本。
+1. selenium更新频繁且会改动函数名,如果代码无法执行,大概率是selenium版本不对,需要调整代码或selenium版本。
 2. 笔者使用的selenium版本为 `selenium 4.18.1`。
 """
 from selenium import webdriver
@@ -77,7 +77,7 @@ async def fetch_webpage_content(url):
         driver = webdriver.Chrome(options=options)
         driver.get(url)
         
-        # 等待元素加载
+        # 等待元素加载(隐式等待)
         driver.implicitly_wait(5)
         
         # 抓取标题(语法为selenium内置,无需修改)
@@ -97,19 +97,32 @@ async def fetch_webpage_content(url):
         except NoSuchElementException:
             image_urls = []
             print("图片元素未找到")
-        
-        # 关闭浏览器
-        driver.quit()
 
-        if image_urls:
-            # 不使用`asyncio.get_event_loop()`,方便作为模块集成到项目中。
-            await asyncio.gather(*[download_image(url) for url in image_urls])
-        else:
-            print("没有找到图片URLs进行下载")
-            
     except WebDriverException as e:
         title, text = None, None
         print(f"在使用Selenium时发生错误：{str(e)}")
+
+    finally:
+        # 确保无论如何都关闭浏览器
+        if driver:
+            driver.quit()
+    
+    # 关闭浏览器后异步下载图片
+    if image_urls:
+        try:
+            # 使用 return_exceptions=True 使得所有异常都被当作结果返回，而不是抛出
+            # 不使用`asyncio.get_event_loop()`,方便作为模块集成到项目中。
+            results = await asyncio.gather(*[download_image(url) for url in image_urls], return_exceptions=True)
+            
+            # 遍历结果，检查是否有异常被返回
+            for result in results:
+                if isinstance(result, Exception):
+                    print(f"下载过程中发生异常：{result}")
+        except Exception as e:
+            # 这个异常处理是为了捕获gather本身的异常，通常是编程错误
+            print(f"在异步下载图片时发生未预料的异常：{e}")
+    else:
+        print("没有找到图片URLs进行下载")
 
     return title, text
 

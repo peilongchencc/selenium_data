@@ -1,7 +1,7 @@
 """
-File path:fetch_webpage_content.py
+File path:fetch_webpage_content_baidu.py
 Author: peilongchencc@163.com
-Description: 通过selenium 4获取网页的标题和内容。
+Description: 通过selenium 4获取百度热搜。
 Requirements: 
 1. pip install selenium 
 2. 查看自己的chrome版本
@@ -14,6 +14,11 @@ Notes:
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from loguru import logger
+
+# 设置日志
+logger.remove()
+logger.add("baidu_hot_search.log", rotation="1 GB", backtrace=True, diagnose=True, format="{time} {level} {message}")
 
 def fetch_webpage_content(url):
     """通过selenium 4获取网页的标题和内容。
@@ -40,26 +45,28 @@ def fetch_webpage_content(url):
         # 抓取标题(语法为selenium内置,无需修改)
         title = driver.title
         
-        # 尝试抓取内容
+        # 抓取内容
+        text_elements = []
         try:
-            content = driver.find_element(By.CLASS_NAME, "_18p7x")
-            text = content.text
+            elements = driver.find_elements(By.XPATH, '//ul[@id="hotsearch-content-wrapper"]/li/a')
+            for element in elements:
+                text_elements.append(element.text)
         except NoSuchElementException:
-            text = "内容元素未找到"
+            text_elements = ["内容元素未找到"]
             
     except WebDriverException as e:
-        title, text = None, None
-        print(f"在使用Selenium时发生错误：{str(e)}")
-
+        title, text_elements = None, ["在使用Selenium时发生错误:{}".format(str(e))]
+    
     finally:
         # 确保无论如何都关闭浏览器
         if driver:
             driver.quit()
-
-    return title, text
+    return title, text_elements
 
 if __name__ == "__main__":
-    url = 'https://baijiahao.baidu.com/s?id=1793832549445442560'
-    title, text = fetch_webpage_content(url)
-    print("Title:", title)
-    print("Content:", text)
+    url = 'https://www.baidu.com/'
+    title, text_elements = fetch_webpage_content(url)
+    logger.info(f"Title:{title}")
+    for text in text_elements:
+        logger.info(f"Content:{text}")
+    logger.info(f"\n")

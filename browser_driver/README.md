@@ -67,7 +67,7 @@ Links to some of the more popular browser drivers follow.<br>
 
 ## Chrome Driver下载:
 
-![](docs/chrome_driver_download.jpg)
+![](../docs/chrome_driver_download.jpg)
 
 🏖️图中内容解释:<br>
 
@@ -93,7 +93,7 @@ For more information on selecting the right version of ChromeDriver, please see 
 
 有关选择正确版本的 ChromeDriver 的更多信息，请参阅版本选择页面。<br>
 
-![](docs/chrome_driver版本.jpg)
+![](../docs/chrome_driver版本.jpg)
 
 
 ## 下载、安装指令:
