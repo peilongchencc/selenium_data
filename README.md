@@ -1,4 +1,7 @@
 # selenium:
+
+本项目用于讲解selenium 4 的使用。注意⚠️: selenium更新频繁且会改动函数名,如果代码无法执行,大概率是selenium版本不对,需要调整代码或selenium版本。笔者使用的selenium版本为 `selenium 4.18.1`。<br>
+
 - [selenium:](#selenium)
   - [Introduce-The Selenium Browser Automation Project(Selenium 浏览器自动化项目):](#introduce-the-selenium-browser-automation-projectselenium-浏览器自动化项目)
   - [WebDriver:](#webdriver)
