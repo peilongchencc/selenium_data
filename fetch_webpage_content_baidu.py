@@ -10,6 +10,10 @@ Reference Link:
 Notes: 
 1. selenium更新频繁且会改动函数名,如果代码无法执行,大概率是selenium版本不对,需要调整代码或selenium版本。
 2. 笔者使用的selenium版本为 `selenium 4.18.1`。
+Todo:
+1. 未触发百度主页ip封禁策略,ip池未添加。
+2. 利用aiomysql以异步的方式将抓取到的热搜写入mysql,较少程序耗时。写入mysql时注意去重,一段时间内的热搜可能是不变的。
+3. 当前抓取的百度主页热搜前5的内容,从第6位开始需要点击百度主页热搜的 "换一换" 按钮进行切换,代码中暂未添加该逻辑(笔者还不了解selenium怎么处理按键点击)。
 """
 from selenium import webdriver
 from selenium.webdriver.common.by import By
