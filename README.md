@@ -2,6 +2,12 @@
 
 本项目用于讲解selenium 4 的安装与使用。<br>
 
+目录                                     |用途                                                 |备注
+----------------------------------------|----------------------------------------------------|---
+fetch_webpage_content.py                | 通过selenium 4获取网页的标题和内容。                    | 
+fetch_webpage_content_contain_images.py | 异步方式通过selenium 4获取网页的标题和内容(同时下载图片)。 | 
+fetch_baidu_hot_search.sh               | 以shell脚本形式运行爬取百度热搜的python代码              | 
+
 注意⚠️:<br>
 
 selenium更新频繁且会改动函数名,如果代码无法执行,大概率是selenium版本不对,需要调整代码或selenium版本。笔者使用的selenium版本为 `selenium 4.18.1`。<br>

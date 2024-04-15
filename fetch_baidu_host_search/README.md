@@ -7,7 +7,6 @@
 目录                                     |用途                                                 |备注
 ----------------------------------------|----------------------------------------------------|---
 fetch_webpage_content_baidu.py          | 通过selenium 4获取百度热搜。                          | 
-fetch_webpage_content_contain_images.py | 异步方式通过selenium 4获取网页的标题和内容(同时下载图片)。 | 
 fetch_baidu_hot_search.sh               | 以shell脚本形式运行爬取百度热搜的python代码             | 
 
 ## crontab运行该shell脚本:
