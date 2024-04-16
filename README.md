@@ -32,6 +32,7 @@ selenium更新频繁且会改动函数名,如果代码无法执行,大概率是s
   - [Chrome specific functionality(Chrome特定功能):](#chrome-specific-functionalitychrome特定功能)
     - [Options(选项):](#options选项)
   - [selenium示例:](#selenium示例)
+  - [网址传入时注意事项:](#网址传入时注意事项)
   - [selenium使用示例(异步):](#selenium使用示例异步)
 
 ## Introduce-The Selenium Browser Automation Project(Selenium 浏览器自动化项目):
@@ -705,6 +706,17 @@ if __name__ == "__main__":
    - 这行代码通过添加`'--no-sandbox'`参数，禁用了Chrome的沙箱模式。沙箱模式是一种安全机制，用于隔离运行中的进程，防止恶意软件或程序的破坏。在某些环境下，如Docker容器或者是特定的Linux系统中，启用沙箱模式可能会导致权限或兼容性问题。因此，在这些环境下，可能需要禁用沙箱来确保Chrome能够正常运行。但这样做可能会降低安全性，因此在不需要绕过这些限制的环境下不推荐使用。
 
 这些选项一起使用时，允许Selenium以适合自动化测试的方式配置和启动Chrome浏览器，特别是在无图形用户界面的服务器环境中。<br>
+
+
+## 网址传入时注意事项:
+
+传入URL时注意需要包含协议，否则无法爬取。<br>
+
+例如 `"www.baidu.com"`，这是一个不完整的URL，因为它没有协议头部分（如 `http` 或 `https`）。<br>
+
+当 Selenium WebDriver 尝试访问一个没有指定协议的URL时，它无法确定如何正确地处理这个请求。通常情况下，浏览器可能尝试使用默认的 `http` 协议，但在自动化工具（如 Selenium）中，这种操作可能并不会自动进行。<br>
+
+需要将URL改为 `"https://www.baidu.com/"`。<br>
 
 
 ## selenium使用示例(异步):
