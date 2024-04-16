@@ -31,6 +31,7 @@ selenium更新频繁且会改动函数名,如果代码无法执行,大概率是s
     - [Web Scraping(网页抓取):](#web-scraping网页抓取)
   - [Chrome specific functionality(Chrome特定功能):](#chrome-specific-functionalitychrome特定功能)
     - [Options(选项):](#options选项)
+    - [pageLoadStrategy(页面加载策略):](#pageloadstrategy页面加载策略)
   - [selenium示例:](#selenium示例)
   - [网址传入时注意事项:](#网址传入时注意事项)
   - [selenium使用示例(异步):](#selenium使用示例异步)
@@ -623,6 +624,52 @@ Chrome完整Options用法详见下列网址:<br>
 ```txt
 https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
 ```
+
+请将下列内容翻译为地道的中文:
+
+### pageLoadStrategy(页面加载策略):
+
+Three types of page load strategies are available.<br>
+
+有三种类型的页面加载策略可供选择。<br>
+
+The page load strategy queries the `document.readyState` as described in the table below:<br>
+
+页面加载策略会查询如下表中描述的 `document.readyState`：
+
+| Strategy | Ready State  | Notes                                         |
+|----------|--------------|-----------------------------------------------|
+| normal   | complete     | Used by default, waits for all resources to download |
+| eager    | interactive  | DOM access is ready, but other resources like images may still be loading |
+| none     | Any          | Does not block WebDriver at all               |
+
+中文版本:<br>
+
+| Strategy(策略) | Ready State(就绪状态)  | Notes(备注)                                         |
+| normal        | complete              | 默认使用，等待所有资源下载完成                           |
+| eager         | interactive           | DOM访问已准备好，但其他资源如图片可能仍在加载              |
+| none          | Any                   | 根本不阻塞WebDriver                                   |
+
+When navigating to a new page via URL, by default, WebDriver will hold off on completing a navigation method (e.g., `driver.navigate().get()`) until the document ready state is complete.<br> 
+
+通过URL导航到新页面时，默认情况下，WebDriver会等到文档准备就绪状态完成后才完成导航方法（例如，`driver.navigate().get()`）。<br>
+
+This does not necessarily mean that the page has finished loading, especially for sites like Single Page Applications that use JavaScript to dynamically load content after the Ready State returns complete.<br> 
+
+这并不一定意味着页面已经加载完成，特别是对于像单页应用程序这样使用JavaScript在准备就绪状态返回完成后动态加载内容的网站来说。<br>
+
+Note also that this behavior does not apply to navigation that is a result of clicking an element or submitting a form.<br>
+
+请注意，此行为不适用于通过点击元素或提交表单而导致的导航。<br>
+
+If a page takes a long time to load as a result of downloading assets (e.g., images, css, js) that aren’t important to the automation, you can change from the default parameter of normal to eager or none to speed up the session.<br> 
+
+🔥🔥🔥如果页面由于下载不重要的资源（例如图片、CSS、JavaScript）而加载时间过长，你可以将默认参数从normal更改为eager或none以加快会话速度。<br>
+
+This value applies to the entire session, so make sure that your waiting strategy is sufficient to minimize flakiness.<br>
+
+此值适用于整个会话，因此确保你的等待策略足以最大限度地减少不稳定性。<br>
+
 
 ## selenium示例:
 
