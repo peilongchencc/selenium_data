@@ -637,18 +637,18 @@ The page load strategy queries the `document.readyState` as described in the tab
 
 页面加载策略会查询如下表中描述的 `document.readyState`：
 
-| Strategy | Ready State  | Notes                                         |
-|----------|--------------|-----------------------------------------------|
-| normal   | complete     | Used by default, waits for all resources to download |
-| eager    | interactive  | DOM access is ready, but other resources like images may still be loading |
-| none     | Any          | Does not block WebDriver at all               |
+| Strategy | Ready State  | Notes                                                                                        |
+|----------|--------------|----------------------------------------------------------------------------------------------|
+| normal   | complete     | Used by default, waits for all resources to download                                         |
+| eager    | interactive  | DOM access is ready, but other resources like images may still be loading                    |
+| none     | Any          | Does not block WebDriver at all, WebDriver only waits until the initial page is downloaded.  |
 
 中文版本:<br>
 
 | Strategy(策略) | Ready State(就绪状态)  | Notes(备注)                                         |
 | normal        | complete              | 默认使用，等待所有资源下载完成                           |
 | eager         | interactive           | DOM访问已准备好，但其他资源如图片可能仍在加载              |
-| none          | Any                   | 根本不阻塞WebDriver                                   |
+| none          | Any                   | 根本不阻塞WebDriver,WebDriver只等待初始页面下载完成。     |
 
 When navigating to a new page via URL, by default, WebDriver will hold off on completing a navigation method (e.g., `driver.navigate().get()`) until the document ready state is complete.<br> 
 
