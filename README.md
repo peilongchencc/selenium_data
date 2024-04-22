@@ -32,6 +32,10 @@ selenium更新频繁且会改动函数名,如果代码无法执行,大概率是s
   - [Chrome specific functionality(Chrome特定功能):](#chrome-specific-functionalitychrome特定功能)
     - [Options(选项):](#options选项)
     - [pageLoadStrategy(页面加载策略):](#pageloadstrategy页面加载策略)
+  - [Waiting Strategies(等待策略):](#waiting-strategies等待策略)
+    - [Implicit waits(隐式等待):](#implicit-waits隐式等待)
+    - [Explicit waits(显式等待):](#explicit-waits显式等待)
+    - [Customization(自定义):](#customization自定义)
   - [selenium示例:](#selenium示例)
   - [网址传入时注意事项:](#网址传入时注意事项)
   - [selenium使用示例(异步):](#selenium使用示例异步)
@@ -670,6 +674,148 @@ This value applies to the entire session, so make sure that your waiting strateg
 
 此值适用于整个会话，因此确保你的等待策略足以最大限度地减少不稳定性。<br>
 
+
+## Waiting Strategies(等待策略):
+
+Perhaps the most common challenge for browser automation is ensuring that the web application is in a state to execute a particular Selenium command as desired.<br> 
+
+对于浏览器自动化来说，最常见的挑战之一是确保网络应用处于执行特定 Selenium 命令所需的状态。<br>
+
+The processes often end up in a race condition where sometimes the browser gets into the right state first (things work as intended) and sometimes the Selenium code executes first (things do not work as intended). This is one of the primary causes of flaky tests.<br>
+
+这些过程通常会出现竞争条件，有时浏览器先处于正确的状态（事情按预期进行），有时 Selenium 代码先执行（事情不按预期进行）。这是测试不稳定的主要原因之一。<br>
+
+All navigation commands wait for a specific `readyState` value based on the page load strategy (the default value to wait for is "complete") before the driver returns control to the code.<br> 
+
+所有导航命令在驱动程序将控制返回给代码之前，都会等待基于页面加载策略的特定 `readyState` 值（等待的默认值是“complete”）。<br>
+
+The readyState only concerns itself with loading assets defined in the HTML, but loaded JavaScript assets often result in changes to the site, and elements that need to be interacted with may not yet be on the page when the code is ready to execute the next Selenium command.<br>
+
+readyState 仅关注于加载 HTML 中定义的资源，但加载的 JavaScript 资源通常会导致网站发生变化，当代码准备执行下一个 Selenium 命令时，需要交互的元素可能尚未出现在页面上。<br>
+
+Similarly, in a lot of single page applications, elements get dynamically added to a page or change visibility based on a click. An element must be both present and displayed on the page in order for Selenium to interact with it.<br>
+
+同样，在许多单页面应用程序中，元素会动态添加到页面上或根据点击更改可见性。为了让 Selenium 能够与之交互，一个元素必须同时存在并显示在页面上。<br>
+
+Take this page for example: https://www.selenium.dev/selenium/web/dynamic.html When the “Add a box!” button is clicked, a “div” element that does not exist is created. When the “Reveal a new input” button is clicked, a hidden text field element is displayed. In both cases the transition takes a couple seconds. If the Selenium code is to click one of these buttons and interact with the resulting element, it will do so before that element is ready and fail.<br>
+
+以这个页面为例：https://www.selenium.dev/selenium/web/dynamic.html 当单击“Add a box!” 按钮时，将创建一个不存在的 “div” 元素。当单击“Reveal a new input” 按钮时，将显示一个隐藏的文本字段元素。在这两种情况下，转换需要几秒钟的时间。如果 Selenium 代码要单击其中一个按钮并与生成的元素交互，它将在该元素准备就绪之前执行，从而失败。<br>
+
+The first solution many people turn to is adding a sleep statement to pause the code execution for a set period of time. Because the code can’t know exactly how long it needs to wait, this can fail when it doesn’t sleep long enough. Alternately, if the value is set too high and a sleep statement is added in every place it is needed, the duration of the session can become prohibitive.<br>
+
+许多人首先尝试的解决方案是添加一个 sleep 语句来暂停代码执行一段固定的时间。由于代码无法准确知道需要等待多长时间，当它不够长时间休眠时，这种方法可能会失败。或者，如果值设置得太高，并且在每个需要的地方都添加了一个 sleep 语句，会话的持续时间可能会变得不可接受。<br>
+
+Selenium provides two different mechanisms for synchronization that are better.<br>
+
+Selenium 提供了两种不同的同步机制，它们更好用。
+
+### Implicit waits(隐式等待):
+
+Selenium has a built-in way to automatically wait for elements called an implicit wait. An implicit wait value can be set either with the timeouts capability in the browser options, or with a driver method (as shown below).<br>
+
+Selenium 提供了一种内置的自动等待元素的方式，称为隐式等待。隐式等待值可以通过浏览器选项中的超时功能或驱动程序方法（如下所示）进行设置。<br>
+
+This is a global setting that applies to every element location call for the entire session. The default value is 0, which means that if the element is not found, it will immediately return an error.<br> 
+
+这是一个全局设置，适用于整个会话的每个元素定位调用。默认值为 0，这意味着如果找不到元素，它将立即返回错误。<br>
+
+If an implicit wait is set, the driver will wait for the duration of the provided value before returning the error.<br> 
+
+如果设置了隐式等待，驱动程序将在提供的值的持续时间内等待，然后再返回错误。<br>
+
+Note that as soon as the element is located, the driver will return the element reference and the code will continue executing, so a larger implicit wait value won’t necessarily increase the duration of the session.<br>
+
+请注意，一旦找到元素，驱动程序将返回元素引用，并且代码将继续执行，因此较大的隐式等待值不一定会增加会话的持续时间。<br>
+
+🚨🚨🚨Warning: Do not mix implicit and explicit waits. Doing so can cause unpredictable wait times. For example, setting an implicit wait of 10 seconds and an explicit wait of 15 seconds could cause a timeout to occur after 20 seconds.<br>
+
+警告：不要混合使用隐式等待和显式等待。这样做可能会导致不可预测的等待时间。例如，设置隐式等待 10 秒和显式等待 15 秒可能导致在 20 秒后发生超时。<br>
+
+Solving our example with an implicit wait looks like this:<br>
+
+通过隐式等待解决我们的示例如下所示：
+
+```python
+driver.implicitly_wait(2)
+```
+
+### Explicit waits(显式等待):
+
+Explicit waits are loops added to the code that poll the application for a specific condition to evaluate as true before it exits the loop and continues to the next command in the code.<br> 
+
+显式等待是添加到代码中的循环，它会轮询应用程序以等待特定条件评估为真，然后退出循环并继续执行代码中的下一个命令。<br>
+
+If the condition is not met before a designated timeout value, the code will give a timeout error.<br> 
+
+如果在指定的超时值之前未满足条件，则代码将给出超时错误。<br>
+
+‼️‼️‼️Since there are many ways for the application not to be in the desired state, so explicit waits are a great choice to specify the exact condition to wait for in each place it is needed.<br>
+
+由于应用程序不处于所需状态的方式有很多种，因此显式等待是指定在每个需要的地方等待的确切条件的绝佳选择。<br>
+
+Another nice feature is that, by default, the Selenium Wait class automatically waits for the designated element to exist.<br>
+
+另一个很好的特性是，默认情况下，Selenium 等待类会自动等待指定的元素存在。<br>
+
+```python
+import pytest
+import time
+from selenium.common import NoSuchElementException, ElementNotInteractableException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+
+def test_explicit(driver):
+    driver.get('https://www.selenium.dev/selenium/web/dynamic.html')
+    revealed = driver.find_element(By.ID, "revealed")
+    driver.find_element(By.ID, "reveal").click()
+
+    wait = WebDriverWait(driver, timeout=2)
+    wait.until(lambda d : revealed.is_displayed())
+
+    revealed.send_keys("Displayed")
+    assert revealed.get_property("value") == "Displayed"
+```
+
+### Customization(自定义):
+
+The `Wait` class can be instantiated with various parameters that will change how the conditions are evaluated.<br>
+
+`Wait` 类可以使用各种参数进行实例化，这些参数将改变条件的评估方式。<br>
+
+This can include:<br>
+
+- Changing how often the code is evaluated (polling interval) 改变代码评估的频率（轮询间隔）
+
+- Specifying which exceptions should be handled automatically 指定应自动处理哪些异常
+
+- Changing the total timeout length 改变总超时时长
+
+- Customizing the timeout message 自定义超时消息
+
+For instance, if the element not interactable error is retried by default, then we can add an action on a method inside the code getting executed (we just need to make sure that the code returns true when it is successful):<br>
+
+例如，如果默认情况下重新尝试元素不可交互错误，那么我们可以在执行的代码中添加一个方法上的操作（我们只需要确保当成功时代码返回 true）：<br>
+
+```python
+import pytest
+import time
+from selenium.common import NoSuchElementException, ElementNotInteractableException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+
+def test_explicit_options(driver):
+    driver.get('https://www.selenium.dev/selenium/web/dynamic.html')
+    revealed = driver.find_element(By.ID, "revealed")
+    driver.find_element(By.ID, "reveal").click()
+
+    errors = [NoSuchElementException, ElementNotInteractableException]
+    wait = WebDriverWait(driver, timeout=2, poll_frequency=.2, ignored_exceptions=errors)
+    wait.until(lambda d : revealed.send_keys("Displayed") or True)
+
+    assert revealed.get_property("value") == "Displayed"
+```
+
+请将下列内容翻译为地道的中文：
 
 ## selenium示例:
 
