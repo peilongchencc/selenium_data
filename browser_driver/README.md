@@ -6,7 +6,7 @@
   - [常见浏览器驱动程序的下载链接:](#常见浏览器驱动程序的下载链接)
   - [Chrome Driver下载:](#chrome-driver下载)
   - [下载、安装指令:](#下载安装指令)
-  - [ubuntu更新Chrome指令：](#ubuntu更新chrome指令)
+  - [ubuntu更新Chrome指令(可选)：](#ubuntu更新chrome指令可选)
 
 ## Drivers 简介:
 
@@ -135,7 +135,7 @@ Archive:  chromedriver-linux64.zip
 ```
 
 
-## ubuntu更新Chrome指令：
+## ubuntu更新Chrome指令(可选)：
 
 笔者使用的 ubuntu 18.4, 当前的 Google Chrome 版本是 121.0.6167.85。要升级 Google Chrome 到最新版本:<br>
 
