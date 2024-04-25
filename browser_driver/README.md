@@ -6,6 +6,7 @@
   - [常见浏览器驱动程序的下载链接:](#常见浏览器驱动程序的下载链接)
   - [Chrome Driver下载:](#chrome-driver下载)
   - [下载、安装指令:](#下载安装指令)
+  - [ubuntu安装chrome:](#ubuntu安装chrome)
   - [ubuntu更新Chrome指令(可选)：](#ubuntu更新chrome指令可选)
 
 ## Drivers 简介:
@@ -97,6 +98,8 @@ For more information on selecting the right version of ChromeDriver, please see 
 
 ## 下载、安装指令:
 
+`wget` 下载可能会由于网络原因下载失败，如果失败可以在其他能够下载的主机上下载，然后将文件上传到服务器。<br>
+
 ```bash
 # 下载ChromeDriver
 wget https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.105/linux64/chromedriver-linux64.zip
@@ -133,6 +136,63 @@ Archive:  chromedriver-linux64.zip
 (base) root@iZ2zea5v77oawjy2qzxxxxx:/data/selenium_data# sudo mv chromedriver-linux64 /usr/local/bin/
 (base) root@iZ2zea5v77oawjy2qzxxxxx:/data/selenium_data# 
 ```
+
+
+## ubuntu安装chrome:
+
+1. **下载 Google 的公钥**：
+
+```bash
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+```
+
+2. **设置 Google Chrome 的仓库**：
+
+```bash
+sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+```
+
+3. **更新软件包列表**：
+
+```bash
+sudo apt-get update
+```
+
+4. **安装 Google Chrome**：
+
+如果之前没有安装过 Google Chrome，使用：<br>
+
+```bash
+sudo apt-get install google-chrome-stable
+```
+
+安装后出现下列信息是正常的:<br>
+
+```log
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+```
+
+这段日志信息主要记录了在 Ubuntu 系统上安装软件包时的步骤和相关的系统配置更新。大部分内容都是正常的，包括设置新软件包、处理系统触发器（如 `libc-bin` 和 `libglib2.0-0`）、以及配置 `google-chrome-stable` 等。<br>
+
+一个值得注意的地方是这两行关于 `debconf` 的警告：<br>
+
+```log
+debconf: unable to initialize frontend: Dialog
+debconf: (Dialog frontend requires a screen at least 13 lines tall and 31 columns wide.)
+debconf: falling back to frontend: Readline
+```
+
+这意味着 `debconf`（Debian 配置管理工具）尝试使用一个对话框界面来显示配置信息，但是因为当前环境可能是一个不支持图形界面的终端或屏幕尺寸不足，所以无法正确初始化对话框界面。因此，系统自动回退到使用更基础的 `Readline` 界面。这在没有 GUI 的服务器环境中是常见的，并不影响软件包的安装和系统的功能。<br>
+
+总的来说，除了上述的 `debconf` 警告之外，其他的日志信息显示软件包安装过程正常，没有错误报告。<br>
 
 
 ## ubuntu更新Chrome指令(可选)：
